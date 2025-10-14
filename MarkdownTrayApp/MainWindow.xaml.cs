@@ -64,8 +64,12 @@ namespace MarkdownTrayApp
         {
             e.Cancel = true;
             Hide();
-            notifyIcon.ShowBalloonTip(2000, "Markdown Viewer",
-                "Application minimized to tray", ToolTipIcon.Info);
+            notifyIcon.ShowBalloonTip(
+                500,
+                "Markdown Viewer",
+                "Application minimized to tray",
+                ToolTipIcon.None
+            );
         }
 
         private void ExitApplication()
@@ -86,6 +90,7 @@ namespace MarkdownTrayApp
             {
                 Resources["BackgroundBrush"] = Resources["DarkBackgroundBrush"];
                 Resources["ForegroundBrush"] = Resources["DarkForegroundBrush"];
+                Resources["BorderBrush"] = Resources["DarkBorderBrush"];
                 Style = (Style)Resources["DarkTheme"];
                 //Background = new SolidColorBrush(Color.FromRgb(45, 45, 48));
                 //Foreground = Brushes.White;
@@ -94,6 +99,7 @@ namespace MarkdownTrayApp
             {
                 Resources["BackgroundBrush"] = Resources["LightBackgroundBrush"];
                 Resources["ForegroundBrush"] = Resources["LightForegroundBrush"];
+                Resources["BorderBrush"] = Resources["LightBorderBrush"];
                 Style = (Style)Resources["LightTheme"];
                 //Background = Brushes.White;
                 //Foreground = Brushes.Black;
@@ -115,6 +121,7 @@ namespace MarkdownTrayApp
         private void ScanFiles_Click(object sender, RoutedEventArgs e)
         {
             ScanFiles();
+            tabMain.SelectedIndex = 1; // Switch to Results tab
         }
 
         private void ScanFiles()
