@@ -244,8 +244,9 @@
                                 <TreeView.ItemTemplate>
                                     <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                                         <TextBlock Text="{Binding DisplayText}" 
-                                   FontFamily="Consolas"
-                                   Margin="2"/>
+                                                   FontFamily="Consolas"
+                                                   Margin="2"
+                                                   Foreground="{DynamicResource ForegroundBrush}"/>
                                     </HierarchicalDataTemplate>
                                 </TreeView.ItemTemplate>
                             </TreeView>
