@@ -26,16 +26,108 @@
         <SolidColorBrush x:Key="BackgroundBrush" Color="{Binding Source={x:Static SystemColors.WindowColorKey}}"/>
         <SolidColorBrush x:Key="ForegroundBrush" Color="{Binding Source={x:Static SystemColors.WindowTextColorKey}}"/>
 
-        <!-- TabControl Style -->
+        <!-- TabControl Style (keeps content border and header area aligned) -->
         <Style TargetType="TabControl">
             <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
             <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#0078D7"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabControl">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Header panel: keep some margin so tabs sit on top of content border -->
+                            <TabPanel
+                        x:Name="HeaderPanel"
+                        Grid.Row="0"
+                        IsItemsHost="True"
+                        Background="{TemplateBinding Background}"
+                        Margin="4,4,4,0"
+                        KeyboardNavigation.TabIndex="1"/>
+
+                            <!-- Content area with a consistent border -->
+                            <Border
+                        Grid.Row="1"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Background="{TemplateBinding Background}"
+                        Margin="4,0,4,4"
+                        CornerRadius="3">
+                                <ContentPresenter
+                            x:Name="PART_SelectedContentHost"
+                            Margin="6"
+                            ContentSource="SelectedContent"/>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
-        <!-- TabItem Style -->
+
+        <!-- TabItem Style (overlap neighbours slightly and pop selected tab up) -->
         <Style TargetType="TabItem">
+            <!-- sensible defaults -->
             <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
             <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="Padding" Value="10,4"/>
+            <!-- Right negative margin removes 1px seam between neighboring tabs -->
+            <Setter Property="Margin" Value="0,0,-1,0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Grid>
+                            <Border
+                        x:Name="Bd"
+                        CornerRadius="4,4,0,0"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}">
+                        <ContentPresenter
+                            x:Name="ContentSite"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            ContentSource="Header"
+                            RecognizesAccessKey="True"/>
+                            </Border>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <!-- Selected: remove bottom border so it visually merges into content,
+                         bring to front and "pop" it up slightly with a translate transform -->
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#0078D7"/>
+                                <!-- omit bottom border so it connects smoothly to content border -->
+                                <Setter TargetName="Bd" Property="BorderThickness" Value="1,1,1,0"/>
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+                                <Setter TargetName="ContentSite" Property="TextElement.FontWeight" Value="Bold"/>
+                                <Setter Property="Padding" Value="12,6"/>
+                                <Setter Property="Panel.ZIndex" Value="100"/>
+                                <Setter TargetName="Bd" Property="SnapsToDevicePixels" Value="True"/>
+                                <!-- small upward shift to "pop" the tab -->
+                                <Setter TargetName="Bd" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <TranslateTransform Y="-3"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="Gray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
+
+
         <!-- GroupBox Style -->
         <Style TargetType="GroupBox">
             <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
@@ -75,19 +167,25 @@
 
                         <!-- Theme Selection -->
                         <StackPanel Orientation="Horizontal" Margin="5" Grid.Row="0">
-                            <Label Content="Theme:" Width="120"/>
+                            <Label Content="Theme:" Width="120"
+                                   Foreground="{DynamicResource ForegroundBrush}"/>
                             <RadioButton x:Name="rbLight" Content="Light Mode" 
                                  Margin="5,0" IsChecked="True" 
-                                 Checked="Theme_Changed" GroupName="Theme"/>
+                                 Checked="Theme_Changed" GroupName="Theme"
+                                 Foreground="{DynamicResource ForegroundBrush}"/>
                             <RadioButton x:Name="rbDark" Content="Dark Mode" 
                                  Margin="5,0" 
-                                 Checked="Theme_Changed" GroupName="Theme"/>
+                                 Checked="Theme_Changed" GroupName="Theme"
+                                 Foreground="{DynamicResource ForegroundBrush}"/>
                         </StackPanel>
 
                         <!-- Directory Path -->
                         <StackPanel Orientation="Horizontal" Margin="5" Grid.Row="1">
-                            <Label Content="Top Directory:" Width="120"/>
-                            <TextBox x:Name="txtDirectory" Width="400" Margin="5,0"/>
+                            <Label Content="Top Directory:" Width="120"
+                                   Foreground="{DynamicResource ForegroundBrush}"/>
+                            <TextBox x:Name="txtDirectory" Width="400" Margin="5,0"
+                                     Foreground="{DynamicResource ForegroundBrush}"
+                                     Background="{DynamicResource BackgroundBrush}"/>
                             <Button Content="Browse..." Click="BrowseDirectory_Click" 
                             Width="80" Margin="5,0"/>
                         </StackPanel>
@@ -98,13 +196,17 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <Label Content="Filenames to Search (one per line):" Grid.Row="0"/>
+                            <Label Content="Filenames to Search (one per line):"
+                                   Grid.Row="0"
+                                   Foreground="{DynamicResource ForegroundBrush}"/>
                             <TextBox x:Name="txtFilenames"
                                      Grid.Row="1"
                                      TextWrapping="Wrap" AcceptsReturn="True"
                                      VerticalScrollBarVisibility="Auto"
                                      MinHeight="80"
-                                     VerticalAlignment="Stretch"/>
+                                     VerticalAlignment="Stretch"
+                                     Foreground="{DynamicResource ForegroundBrush}"
+                                     Background="{DynamicResource BackgroundBrush}"/>
                         </Grid>
 
                         <!-- Action Buttons pinned to bottom -->
