@@ -64,8 +64,12 @@ namespace MarkdownTrayApp
         {
             e.Cancel = true;
             Hide();
-            notifyIcon.ShowBalloonTip(2000, "Markdown Viewer",
-                "Application minimized to tray", ToolTipIcon.Info);
+            notifyIcon.ShowBalloonTip(
+                500,
+                "Markdown Viewer",
+                "Application minimized to tray",
+                ToolTipIcon.None
+            );
         }
 
         private void ExitApplication()
