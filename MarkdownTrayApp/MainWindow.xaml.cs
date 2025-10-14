@@ -90,6 +90,7 @@ namespace MarkdownTrayApp
             {
                 Resources["BackgroundBrush"] = Resources["DarkBackgroundBrush"];
                 Resources["ForegroundBrush"] = Resources["DarkForegroundBrush"];
+                Resources["BorderBrush"] = Resources["DarkBorderBrush"];
                 Style = (Style)Resources["DarkTheme"];
                 //Background = new SolidColorBrush(Color.FromRgb(45, 45, 48));
                 //Foreground = Brushes.White;
@@ -98,6 +99,7 @@ namespace MarkdownTrayApp
             {
                 Resources["BackgroundBrush"] = Resources["LightBackgroundBrush"];
                 Resources["ForegroundBrush"] = Resources["LightForegroundBrush"];
+                Resources["BorderBrush"] = Resources["LightBorderBrush"];
                 Style = (Style)Resources["LightTheme"];
                 //Background = Brushes.White;
                 //Foreground = Brushes.Black;
