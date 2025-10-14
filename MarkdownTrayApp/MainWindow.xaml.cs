@@ -119,6 +119,7 @@ namespace MarkdownTrayApp
         private void ScanFiles_Click(object sender, RoutedEventArgs e)
         {
             ScanFiles();
+            tabMain.SelectedIndex = 1; // Switch to Results tab
         }
 
         private void ScanFiles()

@@ -41,6 +41,14 @@
             <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
             <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
         </Style>
+
+        <Style x:Key="PrimaryButton" TargetType="Button">
+            <Setter Property="Background" Value="#0078D7"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="BorderBrush" Value="#005A9E"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
     </Window.Resources>
 
     <Grid>
@@ -49,7 +57,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TabControl Grid.RowSpan="2" Margin="0,0,0,0">
+        <TabControl x:Name="tabMain" Grid.RowSpan="2" Margin="0,0,0,0">
             <TabItem Header="Settings">
                 <!-- Settings Panel -->
                 <GroupBox Header="Settings" Margin="10">
@@ -102,8 +110,11 @@
                         <!-- Action Buttons pinned to bottom -->
                         <StackPanel Orientation="Horizontal" Margin="5"
                                     HorizontalAlignment="Right" Grid.Row="3">
-                            <Button Content="Scan Files" Click="ScanFiles_Click" 
-                                    Width="100" Margin="5,0"/>
+                            <Button x:Name="btnScan"
+                                    Content="Scan Files"
+                                    Click="ScanFiles_Click" 
+                                    Width="100" Margin="5,0"
+                                    Style="{StaticResource PrimaryButton}"/>
                             <Button Content="Save Settings" Click="SaveSettings_Click" 
                                     Width="100" Margin="5,0"/>
                             <Button Content="Hide to Tray" Click="HideToTray_Click" 
