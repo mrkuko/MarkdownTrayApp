@@ -234,17 +234,33 @@
             <TabItem Header="Results">
                 <!-- Results Panel -->
                 <GroupBox Header="Markdown Files Content" Grid.Row="1" Margin="10">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <TreeView x:Name="tvResults" Background="Transparent">
-                            <TreeView.ItemTemplate>
-                                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                                    <TextBlock Text="{Binding DisplayText}" 
-                                       FontFamily="Consolas"
-                                       Margin="2"/>
-                                </HierarchicalDataTemplate>
-                            </TreeView.ItemTemplate>
-                        </TreeView>
-                    </ScrollViewer>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+                            <TreeView x:Name="tvResults" Background="Transparent">
+                                <TreeView.ItemTemplate>
+                                    <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                        <TextBlock Text="{Binding DisplayText}" 
+                                   FontFamily="Consolas"
+                                   Margin="2"/>
+                                    </HierarchicalDataTemplate>
+                                </TreeView.ItemTemplate>
+                            </TreeView>
+                        </ScrollViewer>
+                        <!-- Action Buttons pinned to bottom -->
+                        <StackPanel Orientation="Horizontal" Margin="5"
+                    HorizontalAlignment="Right" Grid.Row="1">
+                            <Button x:Name="btnScanAgain"
+                                    Content="Scan Again"
+                                    Click="ScanFiles_Click" 
+                                    Width="200" Margin="5,3"
+                                    Padding="10,3"
+                                    Style="{StaticResource PrimaryButton}"/>
+                        </StackPanel>
+                    </Grid>
                 </GroupBox>
             </TabItem>
         </TabControl>
