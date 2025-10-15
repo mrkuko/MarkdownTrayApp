@@ -269,8 +269,8 @@ namespace MarkdownTrayApp
                     // On Level
                     bool isHeader = trimmed.StartsWith("#");
                     bool isBullet = trimmed.StartsWith("-");
-                    bool isTask = trimmed.StartsWith("[ ]") || trimmed.StartsWith("[x]") || trimmed.StartsWith("[X]");
-                    bool isDone = trimmed.StartsWith("[x]") || trimmed.StartsWith("[X]");
+                    bool isTask = trimmed.StartsWith("- [ ]") || trimmed.StartsWith("- [x]") || trimmed.StartsWith("- [X]");
+                    bool isDone = trimmed.StartsWith("- [x]") || trimmed.StartsWith("- [X]");
                     if (isHeader)
                     {
                         var text = trimmed.TrimStart('#').Trim();
