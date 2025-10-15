@@ -23,7 +23,15 @@ namespace MarkdownTrayApp
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadSettings();
+            Settings.LoadSettings((theme, directory, filenames) =>
+            {
+                if (theme == "Dark")
+                    rbDark.IsChecked = true;
+                else
+                    rbLight.IsChecked = true;
+                txtDirectory.Text = directory;
+                txtFilenames.Text = filenames;
+            });
         }
 
         private void InitializeTrayIcon()
@@ -125,6 +133,12 @@ namespace MarkdownTrayApp
                 tabMain.SelectedIndex = 1; // Switch to Results tab
             }
         }
+        private void SaveSettings_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.SaveSettings(this);
+            MessageBox.Show("Settings saved successfully!", "Success",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+        }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
@@ -159,20 +173,20 @@ namespace MarkdownTrayApp
         }
 
         // Helper to get the TreeNode from the button's DataContext
-private TreeNode GetTreeNodeFromSender(object sender)
-{
-    return (sender as FrameworkElement)?.DataContext as TreeNode;
-}
+        private TreeNode GetTreeNodeFromSender(object sender)
+        {
+            return (sender as FrameworkElement)?.DataContext as TreeNode;
+        }
 
-// Helper to remove a node from the tree recursively
-private bool RemoveNodeFromTree(ObservableCollection<TreeNode> nodes, TreeNode target)
-{
-    if (nodes == null) return false;
-    if (nodes.Remove(target)) return true;
-    foreach (var node in nodes)
-        if (RemoveNodeFromTree(node.Children, target)) return true;
-    return false;
-}
+        // Helper to remove a node from the tree recursively
+        private bool RemoveNodeFromTree(ObservableCollection<TreeNode> nodes, TreeNode target)
+        {
+            if (nodes == null) return false;
+            if (nodes.Remove(target)) return true;
+            foreach (var node in nodes)
+                if (RemoveNodeFromTree(node.Children, target)) return true;
+            return false;
+        }
 
         private bool ScanFiles()
         {
@@ -344,70 +358,9 @@ private bool RemoveNodeFromTree(ObservableCollection<TreeNode> nodes, TreeNode t
             return nodes;
         }
 
-        private void SaveSettings_Click(object sender, RoutedEventArgs e)
-        {
-            SaveSettings();
-            MessageBox.Show("Settings saved successfully!", "Success",
-                MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        private void SaveSettings()
-        {
-            try
-            {
-                var settings = new
-                {
-                    Theme = rbDark.IsChecked == true ? "Dark" : "Light",
-                    Directory = txtDirectory.Text,
-                    Filenames = txtFilenames.Text
-                };
-
-                var json = System.Text.Json.JsonSerializer.Serialize(settings,
-                    new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(Properties.Resources.SettingsFile, json);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error saving settings: {ex.Message}", "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void LoadSettings()
-        {
-            try
-            {
-                if (File.Exists(Properties.Resources.SettingsFile))
-                {
-                    var json = File.ReadAllText(Properties.Resources.SettingsFile);
-                    var settings = System.Text.Json.JsonSerializer.Deserialize<Settings>(json);
-
-                    if (settings != null)
-                    {
-                        rbDark.IsChecked = settings.Theme == "Dark";
-                        rbLight.IsChecked = settings.Theme != "Dark";
-                        txtDirectory.Text = settings.Directory ?? "";
-                        txtFilenames.Text = settings.Filenames ?? "README.md\nNOTES.md\nTODO.md";
-                        ApplyTheme();
-                    }
-                }
-            }
-            catch
-            {
-                // Use defaults if loading fails
-            }
-        }
-
         private void HideToTray_Click(object sender, RoutedEventArgs e)
         {
             Hide();
-        }
-
-        private class Settings
-        {
-            public string Theme { get; set; }
-            public string Directory { get; set; }
-            public string Filenames { get; set; }
         }
     }
 }
