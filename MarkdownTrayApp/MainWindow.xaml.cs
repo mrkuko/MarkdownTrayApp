@@ -124,6 +124,11 @@ namespace MarkdownTrayApp
             tabMain.SelectedIndex = 1; // Switch to Results tab
         }
 
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            ExitApplication();
+        }
+
         private void ScanFiles()
         {
             tvResults.Items.Clear();
