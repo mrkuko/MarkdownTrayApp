@@ -31,11 +31,11 @@
 
         <!-- TabControl Style (keeps content border and header area aligned) -->
         <Style TargetType="TabControl">
-            <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="Background" Value="Snow"/>
+            <Setter Property="Foreground" Value="Black"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="BorderBrush"
-                    Value="{DynamicResource BorderBrush}"/>
+                    Value="SkyBlue"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabControl">
@@ -76,8 +76,8 @@
         <!-- TabItem Style (overlap neighbours slightly and pop selected tab up) -->
         <Style TargetType="TabItem">
             <!-- sensible defaults -->
-            <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="Background" Value="Snow"/>
+            <Setter Property="Foreground" Value="Black"/>
             <Setter Property="Padding" Value="10,4"/>
             <!-- Right negative margin removes 1px seam between neighboring tabs -->
             <Setter Property="Margin" Value="0,0,-1,0"/>
@@ -108,10 +108,10 @@
                          bring to front and "pop" it up slightly with a translate transform -->
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter TargetName="Bd" Property="BorderBrush"
-                                        Value="{DynamicResource BorderBrush}"/>
+                                        Value="SkyBlue"/>
                                 <!-- omit bottom border so it connects smoothly to content border -->
                                 <Setter TargetName="Bd" Property="BorderThickness" Value="1,1,1,0"/>
-                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+                                <Setter TargetName="Bd" Property="Background" Value="Snow"/>
                                 <Setter TargetName="ContentSite" Property="TextElement.FontWeight" Value="Bold"/>
                                 <Setter Property="Padding" Value="12,6"/>
                                 <Setter Property="Panel.ZIndex" Value="100"/>
@@ -135,9 +135,9 @@
 
         <!-- GroupBox Style -->
         <Style TargetType="GroupBox">
-            <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="Background" Value="Snow"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="BorderBrush" Value="SkyBlue"/>
         </Style>
 
         <Style x:Key="PrimaryButton" TargetType="Button">
@@ -174,24 +174,24 @@
                         <!-- Theme Selection -->
                         <StackPanel Orientation="Horizontal" Margin="5" Grid.Row="0">
                             <Label Content="Theme:" Width="120"
-                                   Foreground="{DynamicResource ForegroundBrush}"/>
+                                   Foreground="Black"/>
                             <RadioButton x:Name="rbLight" Content="Light Mode" 
                                  Margin="5,0" IsChecked="True" 
                                  Checked="Theme_Changed" GroupName="Theme"
-                                 Foreground="{DynamicResource ForegroundBrush}"/>
+                                 Foreground="Black"/>
                             <RadioButton x:Name="rbDark" Content="Dark Mode" 
                                  Margin="5,0" 
                                  Checked="Theme_Changed" GroupName="Theme"
-                                 Foreground="{DynamicResource ForegroundBrush}"/>
+                                 Foreground="Black"/>
                         </StackPanel>
 
                         <!-- Directory Path -->
                         <StackPanel Orientation="Horizontal" Margin="5" Grid.Row="1">
                             <Label Content="Top Directory:" Width="120"
-                                   Foreground="{DynamicResource ForegroundBrush}"/>
+                                   Foreground="Black"/>
                             <TextBox x:Name="txtDirectory" Width="400" Margin="5,0"
-                                     Foreground="{DynamicResource ForegroundBrush}"
-                                     Background="{DynamicResource BackgroundBrush}"/>
+                                     Foreground="Black"
+                                     Background="Snow"/>
                             <Button Content="Browse..." Click="BrowseDirectory_Click" 
                             Width="80" Margin="5,0"/>
                         </StackPanel>
@@ -204,15 +204,15 @@
                             </Grid.RowDefinitions>
                             <Label Content="Filenames to Search (one per line):"
                                    Grid.Row="0"
-                                   Foreground="{DynamicResource ForegroundBrush}"/>
+                                   Foreground="Black"/>
                             <TextBox x:Name="txtFilenames"
                                      Grid.Row="1"
                                      TextWrapping="Wrap" AcceptsReturn="True"
                                      VerticalScrollBarVisibility="Auto"
                                      MinHeight="80"
                                      VerticalAlignment="Stretch"
-                                     Foreground="{DynamicResource ForegroundBrush}"
-                                     Background="{DynamicResource BackgroundBrush}"/>
+                                     Foreground="Black"
+                                     Background="Snow"/>
                         </Grid>
 
                         <!-- Action Buttons pinned to bottom -->
@@ -246,7 +246,7 @@
                                         <TextBlock Text="{Binding DisplayText}" 
                                                    FontFamily="Consolas"
                                                    Margin="2"
-                                                   Foreground="{DynamicResource ForegroundBrush}"/>
+                                                   Foreground="Black"/>
                                     </HierarchicalDataTemplate>
                                 </TreeView.ItemTemplate>
                             </TreeView>
