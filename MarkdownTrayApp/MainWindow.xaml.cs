@@ -131,6 +131,49 @@ namespace MarkdownTrayApp
             ExitApplication();
         }
 
+        private void MarkAsCompleted_Click(object sender, RoutedEventArgs e)
+        {
+            if (GetTreeNodeFromSender(sender) is TreeNode node)
+                node.IsTask = true;
+        }
+
+        private void MarkAsUncompleted_Click(object sender, RoutedEventArgs e)
+        {
+            if (GetTreeNodeFromSender(sender) is TreeNode node)
+                node.IsTask = false;
+        }
+
+        private void DeleteTask_Click(object sender, RoutedEventArgs e)
+        {
+            if (GetTreeNodeFromSender(sender) is TreeNode node)
+            {
+                // Remove node from its parent's Children collection
+                RemoveNodeFromTree(tvResults.ItemsSource as ObservableCollection<TreeNode>, node);
+            }
+        }
+
+        private void UnmarkAsTask_Click(object sender, RoutedEventArgs e)
+        {
+            if (GetTreeNodeFromSender(sender) is TreeNode node)
+                node.IsTask = null;
+        }
+
+        // Helper to get the TreeNode from the button's DataContext
+private TreeNode GetTreeNodeFromSender(object sender)
+{
+    return (sender as FrameworkElement)?.DataContext as TreeNode;
+}
+
+// Helper to remove a node from the tree recursively
+private bool RemoveNodeFromTree(ObservableCollection<TreeNode> nodes, TreeNode target)
+{
+    if (nodes == null) return false;
+    if (nodes.Remove(target)) return true;
+    foreach (var node in nodes)
+        if (RemoveNodeFromTree(node.Children, target)) return true;
+    return false;
+}
+
         private bool ScanFiles()
         {
             tvResults.Items.Clear();
