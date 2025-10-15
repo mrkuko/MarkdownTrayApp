@@ -120,8 +120,10 @@ namespace MarkdownTrayApp
 
         private void ScanFiles_Click(object sender, RoutedEventArgs e)
         {
-            ScanFiles();
-            tabMain.SelectedIndex = 1; // Switch to Results tab
+            if (ScanFiles())
+            {
+                tabMain.SelectedIndex = 1; // Switch to Results tab
+            }
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -129,7 +131,7 @@ namespace MarkdownTrayApp
             ExitApplication();
         }
 
-        private void ScanFiles()
+        private bool ScanFiles()
         {
             tvResults.Items.Clear();
 
@@ -138,7 +140,7 @@ namespace MarkdownTrayApp
             {
                 MessageBox.Show("Please select a valid directory.", "Error",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
+                return false;
             }
 
             var filenames = txtFilenames.Text
@@ -151,7 +153,7 @@ namespace MarkdownTrayApp
             {
                 MessageBox.Show("Please enter at least one filename to search.",
                     "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
+                return false;
             }
 
             try
@@ -172,6 +174,7 @@ namespace MarkdownTrayApp
                 MessageBox.Show($"Error scanning files: {ex.Message}", "Error",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            return true;
         }
 
         private void SearchAndProcessFiles(string dirPath, string searchPattern)
