@@ -124,6 +124,11 @@ namespace MarkdownTrayApp
             tabMain.SelectedIndex = 1; // Switch to Results tab
         }
 
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            ExitApplication();
+        }
+
         private void ScanFiles()
         {
             tvResults.Items.Clear();
@@ -169,22 +174,26 @@ namespace MarkdownTrayApp
             }
         }
 
-        private void SearchAndProcessFiles(string directory, string filename)
+        private void SearchAndProcessFiles(string dirPath, string searchPattern)
         {
-            Console.WriteLine($"Searching for all \"{filename}\" files inside \"{directory}\"");
+            System.Diagnostics.Debug.WriteLine($"Searching for all \"{searchPattern}\" files inside \"{dirPath}\"");
             try
             {
-                var files = Directory.GetFiles(directory, filename,
-                    SearchOption.AllDirectories);
-                Console.WriteLine($"Found: {files}");
-                foreach (var file in files)
+                var files = Directory.GetFiles(
+                    dirPath,
+                    searchPattern,
+                    SearchOption.AllDirectories
+                );
+
+                System.Diagnostics.Debug.WriteLine($"Found following files: {files}");
+                foreach (var path in files)
                 {
-                    ProcessMarkdownFile(file);
+                    ProcessMarkdownFile(path);
                 }
             }
-            catch (UnauthorizedAccessException)
+            catch (UnauthorizedAccessException e)
             {
-                // Skip directories we don't have access to
+                System.Diagnostics.Debug.WriteLine(e);
             }
         }
 
@@ -201,10 +210,10 @@ namespace MarkdownTrayApp
                     DisplayText = $"📄 {Path.GetFileName(filePath)} ({filePath})"
                 };
 
-                var rootChildren = ParseIndentedLines(lines, 0, 0);
-                foreach (var child in rootChildren)
+                int idx = 0;
+                foreach (var node in ParseIndentedLines(lines, ref idx, 0))
                 {
-                    fileNode.Children.Add(child);
+                    fileNode.Children.Add(node);
                 }
 
                 if (fileNode.Children.Any())
@@ -220,67 +229,62 @@ namespace MarkdownTrayApp
             }
         }
 
-        /// <summary>
-        /// Recursively parses lines based on indentation and bullet/heading markers.
-        /// </summary>
-        private List<TreeNode> ParseIndentedLines(List<string> lines, int startIndex, int currentIndent)
+        private List<TreeNode> ParseIndentedLines(List<string> lines, ref int index, int lvlIndent)
         {
+            // Starts at index 0
+            // Operates at one level of indentation
             var nodes = new List<TreeNode>();
-            int i = startIndex;
 
-            while (i < lines.Count)
+            while (index < lines.Count)
             {
-                var line = lines[i];
+                var line = lines[index];
                 int indent = line.TakeWhile(Char.IsWhiteSpace).Count();
                 string trimmed = line.Trim();
 
-                // Determine type
-                bool isHeader = trimmed.StartsWith("#");
-                bool isBullet = trimmed.StartsWith("-");
-
-                // If indent is less than current level, we’re returning to upper level
-                if (indent < currentIndent)
-                    break;
-
-                // If deeper indent than current, it's a child — stop here and let recursion handle it
-                if (indent > currentIndent)
+                if (indent < lvlIndent)
                 {
+                    // Level Up
+                    return nodes;
+                }
+                else if (indent > lvlIndent)
+                {
+                    // Level Below - child
                     var lastNode = nodes.LastOrDefault();
                     if (lastNode != null)
                     {
-                        var subChildren = ParseIndentedLines(lines, i, indent);
+                        var subChildren = ParseIndentedLines(lines, ref index, indent);
                         foreach (var child in subChildren)
                         {
                             lastNode.Children.Add(child);
                         }
-                        i += subChildren.Count;
                         continue;
                     }
                 }
-
-                // If it’s a top-level or same-level line
-                if (isHeader)
+                else
                 {
-                    var text = trimmed.TrimStart('#').Trim();
-                    nodes.Add(new TreeNode { DisplayText = text });
+                    index++;
+                    // On Level
+                    bool isHeader = trimmed.StartsWith("#");
+                    bool isBullet = trimmed.StartsWith("-");
+                    if (isHeader)
+                    {
+                        var text = trimmed.TrimStart('#').Trim();
+                        nodes.Add(new TreeNode { DisplayText = text });
+                    }
+                    else if (isBullet)
+                    {
+                        var text = trimmed.Substring(1).Trim();
+                        nodes.Add(new TreeNode { DisplayText = $"• {text}" });
+                    }
+                    else if (indent == 0)
+                    {
+                        // Treat any non-bullet, non-header at indent 0 as a heading
+                        nodes.Add(new TreeNode { DisplayText = trimmed });
+                    }
                 }
-                else if (isBullet)
-                {
-                    var text = trimmed.Substring(1).Trim();
-                    nodes.Add(new TreeNode { DisplayText = $"• {text}" });
-                }
-                else if (indent == 0)
-                {
-                    // Treat any non-bullet, non-header at indent 0 as a heading
-                    nodes.Add(new TreeNode { DisplayText = trimmed });
-                }
-
-                i++;
             }
-
             return nodes;
         }
-
 
         private void SaveSettings_Click(object sender, RoutedEventArgs e)
         {

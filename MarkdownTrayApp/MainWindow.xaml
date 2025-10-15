@@ -147,6 +147,13 @@
             <Setter Property="BorderBrush" Value="#005A9E"/>
             <Setter Property="BorderThickness" Value="1"/>
         </Style>
+        <Style x:Key="ExitButton" TargetType="Button">
+            <Setter Property="Background" Value="#C77D7B"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="BorderBrush" Value="#C9302C"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
     </Window.Resources>
 
     <Grid>
@@ -227,6 +234,9 @@
                                     Width="100" Margin="5,0"/>
                             <Button Content="Hide to Tray" Click="HideToTray_Click" 
                                     Width="100" Margin="5,0"/>
+                            <Button Content="Exit" Click="Exit_Click" 
+                                    Width="100" Margin="5,0"
+                                    Style="{StaticResource ExitButton}"/>
                         </StackPanel>
                     </Grid>
                 </GroupBox>
@@ -260,6 +270,9 @@
                                     Width="200" Margin="5,3"
                                     Padding="10,3"
                                     Style="{StaticResource PrimaryButton}"/>
+                            <Button Content="Exit" Click="Exit_Click" 
+                                    Width="100" Margin="5,0"
+                                    Style="{StaticResource ExitButton}"/>
                         </StackPanel>
                     </Grid>
                 </GroupBox>
