@@ -266,20 +266,32 @@ namespace MarkdownTrayApp
                     // On Level
                     bool isHeader = trimmed.StartsWith("#");
                     bool isBullet = trimmed.StartsWith("-");
+                    bool isTask = trimmed.StartsWith("[ ]") || trimmed.StartsWith("[x]") || trimmed.StartsWith("[X]");
+                    bool isDone = trimmed.StartsWith("[x]") || trimmed.StartsWith("[X]");
                     if (isHeader)
                     {
                         var text = trimmed.TrimStart('#').Trim();
-                        nodes.Add(new TreeNode { DisplayText = text });
+                        nodes.Add(new TreeNode { DisplayText = text, OriginalLine = line });
+                    }
+                    else if (isTask)
+                    {
+                        var text = trimmed.Substring(6).Trim();
+                        nodes.Add(new TreeNode
+                        {
+                            DisplayText = text,
+                            IsTask = isDone,
+                            OriginalLine = line
+                        });
                     }
                     else if (isBullet)
                     {
                         var text = trimmed.Substring(1).Trim();
-                        nodes.Add(new TreeNode { DisplayText = $"• {text}" });
+                        nodes.Add(new TreeNode { DisplayText = $"• {text}", OriginalLine = line });
                     }
                     else if (indent == 0)
                     {
                         // Treat any non-bullet, non-header at indent 0 as a heading
-                        nodes.Add(new TreeNode { DisplayText = trimmed });
+                        nodes.Add(new TreeNode { DisplayText = trimmed, OriginalLine = line });
                     }
                 }
             }
@@ -351,12 +363,5 @@ namespace MarkdownTrayApp
             public string Directory { get; set; }
             public string Filenames { get; set; }
         }
-    }
-
-    public class TreeNode
-    {
-        public string DisplayText { get; set; }
-        public ObservableCollection<TreeNode> Children { get; set; } =
-            new ObservableCollection<TreeNode>();
     }
 }
